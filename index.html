@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Grunt.js Presentation</title>
+
+		<meta name="description" content="JS Task Runner">
+		<meta name="author" content="Achilleas Kiritsakas">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<style type="text/css">
+			p { text-align: left; }
+			.center{text-align: center;}
+		</style>
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Grunt.js</h1>
+					<h3>The Javascript Task Runner</h3>
+					<p class="center">
+						<small><a href="http://gruntjs.com/" target="_blank">gruntjs.com</a></small>
+					</p>
+				</section>
+
+				<section>
+					<h2>Why use a task runner?</h2>
+					<p>
+						In one word: automation. The less work you have to do when performing repetitive tasks like minification, compilation, unit testing, linting, etc, the easier your job becomes. After you've configured it, a task runner can do most of that mundane work for you—and your team—with basically zero effort.
+					</p>
+
+					<aside class="notes">
+						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
+					</aside>
+				</section>
+
+				<section>
+					<h2>Why use Grunt?</h2>
+					<p>
+						The Grunt ecosystem is huge and it's growing every day. With literally hundreds of plugins to choose from, you can use Grunt to automate just about anything with a minimum of effort. If someone hasn't already built what you need, authoring and publishing your own Grunt plugin to npm is a breeze.
+					</p>
+				</section>
+
+				<section>
+					<h2>Who uses Grunt?</h2>
+					<a href="#" class="image navigate-down">
+						<img width="699" height="220" src="img/who_use_this.jpg" alt="Who uses it?">
+					</a>
+				</section>
+
+				
+
+
+
+
+
+				<!-- Example of nested vertical slides -->
+				<section>
+					<section>
+						<h2>Installation</h2>
+						<p>
+							Grunt and Grunt plugins are installed and managed via <a href="https://www.npmjs.org/">npm</a>, the Node.js package manager.
+						</p>
+					</section>
+
+					<section>
+						<h2>Installing the CLI</h2>
+						<!-- <pre><code data-trim contenteditable style="font-size: 18px; margin-top: 20px;"> -->
+						<pre><code data-trim style="font-size: 18px; margin-top: 20px;">
+							npm install -g grunt-cli
+						</code></pre>
+						<p>This will put the grunt command in your system path, allowing it to be run from any directory.</p>
+					</section>
+
+					<section>
+						<h2>Preparing a new Grunt project</h2>
+						<p>A typical setup will involve adding two files to your project:</p>
+						<pre><code>
+1. package.json
+2. Gruntfile.js
+						</code></pre>
+						<p>
+							<strong>package.json:</strong><small>This file is used by npm to store metadata for projects published as npm modules. You will list grunt and the Grunt plugins your project needs as devDependencies in this file.</small>
+						</p>
+						<p>
+							<strong>Gruntfile:</strong> <small>This file is named Gruntfile.js and is used to configure or define tasks and load Grunt plugins.</small>
+						</p>
+
+					</section>
+					<section>
+						<h3>package.json</h3>
+						<p>The <code>package.json</code> file belongs in the root directory of your project, next to the <code>Gruntfile</code>, and should be committed with your project source. Running <code>npm install</code> in the same folder as a <code>package.json</code> file will install the correct version of each dependency listed there.</p>
+						<p>There are a few ways to create a package.json file for your project:</p>
+						<ul>
+							<li>Most <code>grunt-init templates</code> will automatically create a project-specific package.json file.</li>
+							<li>The <code>npm init</code> command will create a basic package.json file.</li>
+							<li>Start with a standard template</li>
+						</ul>
+					</section>
+					<section>
+						<h4>Example of package.json</h4>
+						<pre>
+							<code data-trim style="font-size: 18px; margin-top: 20px;">
+{
+  "name": "my-project-name",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-nodeunit": "~0.3.3",
+    "grunt-contrib-uglify": "~0.4.0"
+  }
+}
+							</code>
+						</pre>
+					</section>
+
+					<section>
+						<h3>Installing Grunt and Grunt plugins</h3>
+						<p>The easiest way to add Grunt and grunt plugins to an existing <code>package.json</code> is with the command:</p>
+						<pre><code>npm install moduleName --save-dev</code></pre>
+						<p>Not only will this install module locally, but it will automatically be added to the devDependencies section</p>
+					</section>
+
+
+					<!-- <section>
+						<h3>The Gruntfile</h3>
+						<p>A <code>Gruntfile</code> is comprised of the following parts:</p>
+						<ul style="float:left;">
+							<li>The "wrapper" function</li>
+							<li>Project and task configuration</li>
+							<li>Loading Grunt plugins and tasks</li>
+							<li>Custom tasks</li>
+						</ul>
+					</section> -->
+
+					<section>
+						<h3>The Gruntfile</h3>
+						<p>A <code>Gruntfile</code> is comprised of the following parts:</p>
+						<ul style="float:left;">
+							<li class="fragment">The "wrapper" function</li>
+							<li class="fragment">Project and task configuration</li>
+							<li class="fragment">Loading Grunt plugins and tasks</li>
+							<li class="fragment">Custom tasks</li>
+						</ul>
+					</section>
+					
+					<section>
+						<h6>Wrapper function</h6>
+						<p>Every Gruntfile (and gruntplugin) uses this basic format, and all of your Grunt code must be specified inside this function:</p>
+						<pre><code data-trim contenteditable>
+module.exports = function(grunt) {
+
+};							
+						</code></pre>
+					</section>
+
+
+					<section>
+						<h6>Project and task configuration</h6>
+						<p>Most Grunt tasks rely on configuration data defined in an object passed to the <code>grunt.initConfig</code> method.</p>
+						<pre><code data-trim contenteditable>
+grunt.initConfig({
+  pkg: grunt.file.readJSON('package.json'),
+  uglify: {
+    options: {
+      banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+    },
+    build: {
+      src: 'src/<%= pkg.name %>.js',
+      dest: 'build/<%= pkg.name %>.min.js'
+    }
+  }
+});						
+						</code></pre>
+					</section>
+					
+
+					<section>
+						<h6>Loading Grunt plugins and tasks</h6>
+						<p>Many commonly used tasks like concatenation, minification and linting are available as grunt plugins. As long as a plugin is specified in <code>package.json</code> as a dependency, and has been installed via <code>npm install</code>, it may be enabled inside your <code>Gruntfile</code> with a simple command:</p>
+						<pre><code data-trim>
+// Load the plugin that provides the "uglify" task.
+grunt.loadNpmTasks('grunt-contrib-uglify');
+						</code></pre>
+					</section>
+
+					<section>
+						<h6>Custom tasks</h6>
+						<p>You can configure Grunt to run one or more tasks by default by defining a <code>default</code> task. In the following example, running <code>grunt</code> at the command line without specifying a task will run the <code>uglify</code> task. This is functionally the same as explicitly running <code>grunt uglify</code> or even <code>grunt default</code>. Any number of tasks (with or without arguments) may be specified in the array:</p>
+						<pre><code data-trim>
+// Default task(s).
+grunt.registerTask('default', ['uglify']);
+						</code></pre>
+					</section>
+
+					<section>
+						<p>If your project requires tasks not provided by a Grunt plugin, you may define custom tasks right inside the <code>Gruntfile</code>. For example, this <code>Gruntfile</code> defines a completely custom <code>default</code> task that doesn't even utilize task configuration:</p>
+						<pre><code data-trim>
+module.exports = function(grunt) {
+
+  // A very basic default task.
+  grunt.registerTask('default', 'Log some stuff.', function() {
+    grunt.log.write('Logging some stuff...').ok();
+  });
+
+};
+						</code></pre>
+					</section>
+
+
+					<section>
+						<p class="center">Final Result</p>
+
+						<pre><code data-trim contenteditable>
+module.exports = function(grunt) {
+
+  // Project configuration.
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+      },
+      build: {
+        src: 'src/<%= pkg.name %>.js',
+        dest: 'build/<%= pkg.name %>.min.js'
+      }
+    }
+  });
+
+  // Load the plugin that provides the "uglify" task.
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+
+  // Default task(s).
+  grunt.registerTask('default', ['uglify']);
+};							
+						</code></pre>
+					</section>
+
+
+				</section>
+
+				<section>
+					<h3>Further Reading</h3>
+					<ul>
+						<li>The <a href="http://gruntjs.com/installing-grunt/" target="_blank">Installing grunt</a> guide has detailed information about installing specific, production or in-development, versions of Grunt and grunt-cli.</li>
+						<li>The <a href="http://gruntjs.com/configuring-tasks/" target="_blank">Configuring Tasks</a> guide has an in-depth explanation on how to configure tasks, targets, options and files inside the <code>Gruntfile</code>, along with an explanation of templates, globbing patterns and importing external data.</li>
+						<li>The <a href="http://gruntjs.com/creating-tasks/" target="_blank">Creating Tasks</a> guide lists the differences between the types of Grunt tasks and shows a number of sample tasks and configurations.</li>
+						<li>For more information about writing custom tasks or Grunt plugins, check out the <a href="http://gruntjs.com/grunt" target="_blank">developer documentation</a>.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Similar Tools</h3>
+					<img src="img/similar.jpg">
+					<div style="clear:both;"></div>
+					<ul>
+						<li><a href="http://gulpjs.com/">Gulp.js</a></li>
+						<li><a href="http://yeoman.io/">Yeoman</a></li>
+						<li><a href="http://brunch.io/">Brunch</a></li>
+					</ul>
+				</section>
+				
+				<section></section>
+
+
+				<section>
+					<h2>Conclusion</h2>
+					<p class="center">Use a Task Runner because:</p>
+					<ul>
+						<li class="fragment">Eliminates Repetitive work</li>
+						<li class="fragment">Reduces Human Error</li>
+						<li class="fragment">As developers, we are more productive</li>
+						<li class="fragment">Code performance is better, faster responce times</li>
+						<li class="fragment roll-in">Faster Response Times, Happier Humans</li>
+					</ul>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
